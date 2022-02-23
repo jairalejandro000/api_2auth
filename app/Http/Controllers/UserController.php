@@ -14,24 +14,6 @@ use function PHPUnit\Framework\throwException;
 
 class UserController extends Controller
 {
-    /*Prueba de emails y conexion
-    public function Prueba(Request $request){
-        $request->validate(['edad' => 'required']);
-        if($request->edad >= 18){
-            $datos = array(
-                'name'=> "JAIR ALEJANDRO",
-                'email'=> "jairalejandro32@outlook.com"
-            );
-            Mail::send('prueba', $datos, function($message) use ($datos) {
-                $message->from('19170162@uttcampus.edu.mx', 'JAIR ALEJANDRO MARTINEZ CARRILLO');
-                $message->to($datos['email'], $datos['name'])->subject('Holaaaaaaaaaa');
-            });
-            return response()->json(['ya tas grande', $request->edad], 201);
-        }else if($request->edad <= 17){
-            return response()->json(['tas muy chiquito', $request->edad], 201);
-        }
-    }*/
-
     //Create
     public function create(Request $request){
         try{
@@ -44,30 +26,23 @@ class UserController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            $user->code = Str::random(5);
+            $user->save();
             if($user->save()){
-                $datos = array('email'=> $user->email, 'name'=> $user->name, 'code'=> $user->code);
-                Mail::send('code', $datos, function($message) use ($datos) {
-                    $message->from('19170162@uttcampus.edu.mx', 'JAIR ALEJANDRO MARTINEZ CARRILLO');
-                    $message->to($datos['email'], $datos['name'])->subject('Código de autenticación');
-                });
                 return response()->json('User created', 201);
             }
         }catch(Throwable $e){
             return  response()->json('Something wrong', 400);
         }
     }
-
-    //LogIn
-    public function LogIn(Request $request){
+    //Code
+    public function code(Request $request){
         try{
             $request->validate([
                 'email' => 'required|email',
-                'password' => 'required',
                 'code' => 'required'
             ]);
             $user = User::where('email', $request->email)->first();
-            if(! $user || ! Hash::check($request->password, $user->password) || $request->code != $user->code){
+            if(! $user || ! Hash::check($request->code, $user->code)){
                 return response()->json('Something wrong', 400);
             }else{
                 $token = DB::table('personal_access_tokens')->where('personal_access_tokens.name', '=', $request->email)->first();
@@ -78,6 +53,44 @@ class UserController extends Controller
                 }else{
                     $token = $user->createToken($request->email)->plainTextToken;
                     return response()->json(['token' => $token], 201);
+                }
+            }
+        }catch(Throwable $e){
+            return response()->json('Something wrong', 400);
+        }
+    }
+    //LogIn
+    public function LogIn(Request $request){
+        try{
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required'
+            ]);
+            $user = User::where('email', $request->email)->first();
+            if(! $user || ! Hash::check($request->password, $user->password)){
+                return response()->json('Something wrong', 400);
+            }else{
+                $code = DB::table('users')->where('users.email', '=', $request->email)->first();
+                if($code){
+                    $code = Str::random(5);
+                    $user->code = Hash::make($code);
+                    $user->save();
+                    $datos = array('email'=> $user->email, 'name'=> $user->name, 'code'=> $code);
+                    Mail::send('code', $datos, function($message) use ($datos) {
+                        $message->from('19170162@uttcampus.edu.mx', 'JAIR ALEJANDRO MARTINEZ CARRILLO');
+                        $message->to($datos['email'], $datos['name'])->subject('Código de autenticación');
+                    });
+                    return response()->json(['code' => $code], 201);
+                }else{
+                    $code = Str::random(5);
+                    $user->code = Hash::make($code);
+                    $user->save();
+                    $datos = array('email'=> $user->email, 'name'=> $user->name, 'code'=> $code);
+                    Mail::send('code', $datos, function($message) use ($datos) {
+                        $message->from('19170162@uttcampus.edu.mx', 'JAIR ALEJANDRO MARTINEZ CARRILLO');
+                        $message->to($datos['email'], $datos['name'])->subject('Código de autenticación');
+                    });
+                    return response()->json(['code' => $code], 201);
                 }
             }
         }catch(Throwable $e){

@@ -22,3 +22,4 @@ Route::post('/create', 'App\Http\Controllers\UserController@Create');
 Route::get('/show', 'App\Http\Controllers\UserController@Show');
 Route::post('/logIn', 'App\Http\Controllers\UserController@LogIn');
 Route::post('/logOut', 'App\Http\Controllers\UserController@LogOut');
+Route::post('/code', 'App\Http\Controllers\UserController@code');
