@@ -31,8 +31,6 @@ class UserController extends Controller
 
     //Code
     public function code(Request $request){
-        print($request->input('email'));
-        print($request->input('code'));
         try{
             $user = User::where('email', $request->input('email'))->first();
             if(! $user || ! Hash::check($request->input('code'), $user->code)){
