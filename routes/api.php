@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/prueba', 'App\Http\Controllers\UserController@Prueba');
+//Route::get('/prueba', 'App\Http\Controllers\UserController@Prueba');
 Route::post('/create', 'App\Http\Controllers\UserController@Create');
 Route::get('/show', 'App\Http\Controllers\UserController@Show');
 Route::post('/logIn', 'App\Http\Controllers\UserController@LogIn');
