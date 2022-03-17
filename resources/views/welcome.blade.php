@@ -44,7 +44,10 @@
                         </g>
                     </svg>
                 </div>
-
+                <div class="flex justify-center pt-8 sm:justify-center sm:pt-0">
+                    @csrf
+                    <h1>Bienvenido {{$email}}</h1>
+                </div>
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                     <div class="grid grid-cols-1 md:grid-cols-2">
                         <div class="p-6">
@@ -123,7 +126,9 @@
                     </div>
 
                     <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
-                        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+                        <a href="/" class="ml-1 underline">
+                            Cerrar sesión
+                        </a>
                     </div>
                 </div>
             </div>
