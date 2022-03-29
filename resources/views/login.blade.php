@@ -29,6 +29,12 @@
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-link" href="register" role="button" style="color: #ABDEE1;">No tengo cuenta</a>
                         </div>
+                        <div class="d-flex justify-content-center">
+                            <a href="{{ route('pdf_code') }}" class="btn btn-success btn-sm">Export to PDF</a>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <a href="{{ route('sent_pdf_code') }}" class="btn btn-success btn-sm">Sent to SPACES</a>
+                        </div>
                     </form>
                 </div>
             </div>

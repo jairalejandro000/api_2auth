@@ -23,3 +23,5 @@ Route::get('/show', 'App\Http\Controllers\UserController@Show');
 Route::post('/logIn', 'App\Http\Controllers\UserController@LogIn');
 Route::post('/logOut', 'App\Http\Controllers\UserController@LogOut');
 Route::post('/code', 'App\Http\Controllers\UserController@code');
+Route::get('/pdf_code', 'App\Http\Controllers\UserController@PDF_code')->name('pdf_code');
+Route::post('/sent_pdf_code', 'App\Http\Controllers\UserController@SendPDF_code')->name('sent_pdf_code');

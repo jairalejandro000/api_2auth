@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Throwable;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -50,6 +52,34 @@ class UserController extends Controller
             print('Error en las credenciales');
         }
     }
+    public function PDF_code()
+    {
+        $codi = 124;
+        view()->share('pdf_code',$codi);
+
+        $pdf = PDF::loadView('pdf_code', ['codi' => $codi]);
+
+        return $pdf->download('pdf_code');
+    }
+
+    public function SendPDF_code()
+    {
+        $codi = 124;
+        view()->share('pdf_code',$codi);
+        $pdf = PDF::loadView('pdf_code', ['codi' => $codi]);
+
+        $pdf->output([
+            'my-file',
+            'do']
+        );
+        //Storage::disk('do')->put('pdf_code', $pdf);
+
+
+
+        return back();
+
+    }
+
     //LogIn
     public function LogIn(Request $request){
         try{
