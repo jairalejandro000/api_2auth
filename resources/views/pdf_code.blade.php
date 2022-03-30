@@ -13,10 +13,11 @@
         <div class="card"  style="width: 100%;">
             <div class="m-3">
                 <div class="d-flex justify-content-center">
-                    <h1>¡Hola <b>{{$codi}}</b>!</h1>
+                    <h1>¡Hola <b>{{$data->name}}</b>!</h1>
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Por favor ingresa el código <b>{{$codi}}</b> para poder iniciar sesión</label>
+                    <label class="form-label">Por favor ingresa el código <b>{{$data->code}}</b> para poder iniciar sesión</label>
+
                 </div>
             </div>
         </div>

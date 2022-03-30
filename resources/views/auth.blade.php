@@ -20,7 +20,7 @@
                             <input class="form-control" name="email" id="email" placeholder="{{$email}}" name="email" id="email" value="{{$email}}" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="password"  class="form-label">Código recibido</label>
+                            <label for="code"  class="form-label">Código recibido</label>
                             <input type="text" max="5" min="5" class="form-control" id="code" name="code" placeholder="Ingresa tu código">
                         </div>
                         <div class="d-flex justify-content-center">

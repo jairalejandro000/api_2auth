@@ -17,7 +17,7 @@
                         </div>
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label">Correo electrónico</label>
+                            <label for="name" class="form-label">Nombre</label>
                             <input type="text" class="form-control" placeholder="Ingresa tu nombre" name="name" id="name">
                         </div>
                         <div class="mb-3">

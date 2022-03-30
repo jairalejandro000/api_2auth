@@ -64,19 +64,15 @@ class UserController extends Controller
 
     public function SendPDF_code()
     {
-        $codi = 124;
-        view()->share('pdf_code',$codi);
-        $pdf = PDF::loadView('pdf_code', ['codi' => $codi]);
-
-        $pdf->output([
-            'my-file',
-            'do']
+        $user = User::first();
+        view()->share('pdf_code',$user);
+        $pdf = PDF::loadView('pdf_code', ['data' => $user])->output();
+        Storage::disk('do')->put('code_'.$user->email.'.pdf', $pdf);
+        $url = Storage::disk('do')->temporaryUrl(
+            'code_'.$user->email.'.pdf', now()->addMinutes(1)
         );
-        //Storage::disk('do')->put('pdf_code', $pdf);
 
-
-
-        return back();
+        return $url;
 
     }
 
@@ -85,32 +81,30 @@ class UserController extends Controller
         try{
             $user = User::where('email', $request->input('email'))->first();
             if(! $user || ! Hash::check($request->input('password'), $user->password)){
+                //return view('/logIn', 'logIn');
                 return response()->json('Something wrong', 400);
             }else{
-                $code = DB::table('users')->where('users.email', '=', $request->input('email'))->first();
-                if($code){
-                    $code = Str::random(5);
-                    $user->code = Hash::make($code);
-                    $user->save();
-                    $datos = array('email'=> $user->email, 'name'=> $user->name, 'code'=> $code);
-                    Mail::send('code', $datos, function($message) use ($datos) {
-                        $message->from('19170162@uttcampus.edu.mx', 'JAIR ALEJANDRO MARTINEZ CARRILLO');
-                        $message->to($datos['email'], $datos['name'])->subject('Código de autenticación');
-                    });
-                    return view('auth', ['email' => $user->email]);
-                }else{
-                    $code = Str::random(5);
-                    $user->code = Hash::make($code);
-                    $user->save();
-                    $datos = array('email'=> $user->email, 'name'=> $user->name, 'code'=> $code);
-                    Mail::send('code', $datos, function($message) use ($datos) {
-                        $message->from('19170162@uttcampus.edu.mx', 'JAIR ALEJANDRO MARTINEZ CARRILLO');
-                        $message->to($datos['email'], $datos['name'])->subject('Código de autenticación');
-                    });
-                    return view('auth', ['email' => $user->email]);
-                }
+                $code = Str::random(5);
+                $user->code = Hash::make($code);
+                $user->save();
+                $user->code = $code;
+                view()->share('pdf_code',$user);
+                $pdf = PDF::loadView('pdf_code', ['data' => $user])->output();
+                Storage::disk('do')->put('code_'.$user->email.'.pdf', $pdf);
+                $url = Storage::disk('do')->temporaryUrl(
+                    'code_'.$user->email.'.pdf', now()->addMinutes(1)
+                );
+
+                $datos = array('email'=> $user->email, 'name'=> $user->name, 'link' => $url);
+                Mail::send('code', $datos, function($message) use ($datos) {
+                    $message->from('19170162@uttcampus.edu.mx', 'JAIR ALEJANDRO MARTINEZ CARRILLO');
+                    $message->to($datos['email'], $datos['name'])->subject('Código de autenticación');
+                });
+                //return view('/auth', 'auth', ['email' => $user->email]);
+                return view('auth', ['email' => $user->email]);
             }
         }catch(Throwable $e){
+            //return view('/logIn');
             print('Error en las credenciales');
         }
     }

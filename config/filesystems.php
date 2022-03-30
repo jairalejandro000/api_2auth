@@ -57,9 +57,10 @@ return [
             'driver' => 's3',
             'key' => env('DO_ACCESS_KEY_ID'),
             'secret' => env('DO_SECRET_ACCESS_KEY'),
-            'region' => env('DO_DEFAULT_REGION'),
+            'region' => env('DO_REGION'),
             'bucket' => env('DO_BUCKET'),
             'endpoint' => env('DO_ENDPOINT'),
+            'url' => str_replace(env('DO_REGION'),env('DO_BUCKET').'.'.env('DO_REGION'),str_replace("digitaloceanspaces","cdn.digitaloceanspaces",env('DO_ENDPOINT'))),
         ],
 
     ],
